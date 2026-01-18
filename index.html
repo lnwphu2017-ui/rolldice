@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            margin-top: 50px; 
+            background-color: #f0f2f5;
+        }
+        /* ปรับขนาดรูปลูกเต๋า */
+        #dice-img { 
+            width: 150px; 
+            height: 150px; 
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            background-color: #3b82f6; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+        }
+        button:hover { background-color: #2563eb; }
+    </style>
+</head>
+<body>
+
+    <h1>ทอยลูกเต๋า </h1>
+    
+    <img id="dice-img" src="dice1.png" alt="Dice">
+    
+    <br><br>
+    <button onclick="rollDice()">ทอยเลย!</button>
+
+    <script>
+        const supabaseUrl = 'https://sydjvhhmdxvinbcjfecg.supabase.co' 
+        const supabaseKey = 'sb_publishable_N7BnuBlLSQrdfLQbi3n6TQ_BMHHc2iT' 
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function rollDice() {
+           
+            const number = Math.floor(Math.random() * 6) + 1;
+            
+            
+            const imgElement = document.getElementById('dice-img');
+            imgElement.src = 'dice' + number + '.png'; 
+
+            
+            imgElement.animate([
+                { transform: 'rotate(0deg) scale(1)' },
+                { transform: 'rotate(360deg) scale(1.2)' },
+                { transform: 'rotate(0deg) scale(1)' }
+            ], { duration: 500 });
+
+          
+            const { error } = await _supabase
+                .from('rolls')
+                .insert({ number: number })
+            
+            if (error) console.error('Error:', error)
+        }
+    </script>
+</body>
+</html>
